@@ -1,10 +1,40 @@
 import React from "react"
+import { graphql } from "gatsby"
 
-// Indicate to Webpack that this module uses this image.
-import astronaut from "./gatsby-astronaut.png"
-
-console.log(astronaut)
-
-export default function Home() {
-  return <img src={astronaut} alt="The Gatsby astronaut" />
+export default function Home( { data } ) {
+  return (
+    <>
+    <h1>List of PNG images</h1>
+    <ul>
+      {data.allFile.edges.map( (file, index) => {
+        return (
+          <li key={`png-${index}`}>
+            <a href={file.node.publicURL} download>
+              {file.node.name}
+            </a>
+          </li>
+        )
+      })}
+    </ul>
+    </>
+  )
 }
+
+export const query = graphql`
+  {
+    allFile(
+      filter: {
+        extension: {
+          eq: "png"
+        }
+      }
+    ) {
+      edges {
+        node {
+          name
+          publicURL
+        }
+      }
+    }
+  }
+`
